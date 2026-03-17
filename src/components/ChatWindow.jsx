@@ -32,6 +32,14 @@ const ChatWindow = () => {
       
 
   if(step === 0){
+
+    if(msg.trim().length < 3){
+      setMessages(prev => [...prev,
+        { text: "❌ Name must be at least 3 characters", sender:"bot", type:"text" }
+      ])
+      return
+    }
+
     setFormData(prev => ({...prev,name:msg}))
 
     setIsTyping(true)
@@ -49,6 +57,15 @@ const ChatWindow = () => {
 
   else if(step === 1){
 
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
+    if(!emailRegex.test(msg)){
+      setMessages(prev => [...prev,
+         { text: "❌ Please enter a valid email (example@gmail.com)", sender: "bot", type: "text" }
+       ])
+       return
+    }
+
     setFormData(prev => ({...prev,email:msg}))
 
     setIsTyping(true)
@@ -63,6 +80,20 @@ const ChatWindow = () => {
   }
 
   else if(step === 2){
+
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,12}$/
+
+    if(!passwordRegex.test(msg)){
+      setMessages(prev => [...prev,
+       {
+         text: "❌ Password must contain:\n✔ 1 Uppercase\n✔ 1 Lowercase\n✔ 1 Number\n✔ 1 Special character\n✔ 8–12 characters",
+         sender: "bot",
+         type: "text"
+       }
+     ])
+     return
+   }
+
     setFormData(prev => ({...prev,password:msg}))
 
     setIsTyping(true)
@@ -78,32 +109,29 @@ const ChatWindow = () => {
 
   else if(step === 3){
 
-    if(msg === formData.password){
-      setFormData(prev => ({...prev,confirmpassword:msg}))
-      setIsTyping(true)
-       setTimeout(()=>{
-        setIsTyping(false)
-        setMessages(prev => [...prev,
-          {text:"✅ Password confirmed!", sender:"bot",type:"text"},
-        {text:"Please upload your profile photo 📷", sender:"bot",type:"text"}
-        ])
-       },1500)
+    if(msg !== formData.password){
+      setMessages(prev => [...prev,
+        { text: "❌ Passwords do not match. Please try again.", sender:"bot", type:"text" }
+      ])
+      return
+     }
 
-       setStep(4)
-    }
+  // ✅ success
+      setFormData(prev => ({...prev, confirmpassword: msg}))
 
-    else{
-      
       setIsTyping(true)
       setTimeout(()=>{
-       setIsTyping(false)
-        setMessages(prev => [...prev,
-          {text:"Password do not match. Please retype password.",sender:"bot",type:"text"}
-        ])
-      },1000)
+      setIsTyping(false)
+      setMessages(prev => [...prev,
+        { text: "✅ Password confirmed!", sender:"bot", type:"text" },
+        { text: "Please upload your profile photo 📷", sender:"bot", type:"text" }
+      ])
+      setStep(4)
+      },1500)
+
+      
     }
-  }
-}
+ }
 
 // this is image logic ***********************************************************
 
@@ -148,9 +176,16 @@ const handleImageSend = (file) => {
     <div className="w-full h-full flex flex-col justify-between">
 
       {/* Message Area */}
-      <div className="flex flex-col gap-4 p-6 overflow-y-auto">
+      <div className="flex flex-col gap-4 p-6 overflow-y-auto relative overflow-hidden bg-base">
 
-        {messages.map((msg, index)=>(
+        {/* background animation chat */}
+
+        <div className="blob blob1"></div>
+        <div className="blob blob2"></div>
+        <div className="blob blob3"></div>
+
+        <div className="relative z-10 flex flex-col gap-4 p-6">
+          {messages.map((msg, index)=>(
           <ChatMessage
             key={index}
             text={msg.text}
@@ -161,8 +196,15 @@ const handleImageSend = (file) => {
 
         {/* BOT TYPING INDICATOR */}
         {isTyping && (
-        <ChatMessage text="Typing..." sender="bot" />
+          <div className="flex justify-start px-4">
+            <div className="bg-gray-200 px-4 py-2 rounded-2xl flex gap-1">
+              <span className="dot"></span>
+              <span className="dot delay-150"></span>
+              <span className="dot delay-300"></span>
+            </div>
+          </div>
         )}
+        </div>
 
       </div>
 

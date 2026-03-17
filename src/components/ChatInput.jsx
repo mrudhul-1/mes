@@ -39,19 +39,25 @@ const ChatInput = ({ onSend, onImageSend, step }) => {
 
         {/* FILE INPUT ONLY AT STEP 4 */}
         {step === 4 && (
-          <input
-            type="file"
-            accept="image/*"
-            onChange={(e) => {
+             <div className="flex items-center gap-2 w-full">
+
+            {/* HIDDEN INPUT */}
+            <input type="file" accept="image/*" id="fileUpload" className="hidden" onChange={(e) => {
               const file = e.target.files[0]
               if (!file) return
 
               const imageURL = URL.createObjectURL(file)
               setSelectedImage(imageURL)
               setShowCropper(true)
-            }}
-          />
-        )}
+             }} />
+
+            {/* CUSTOM BUTTON */}
+            <label htmlFor="fileUpload" className="flex-1 text-center px-4 py-2 bg-indigo-600 text-white rounded-full cursor-pointer hover:bg-indigo-700 transition">
+            📷 Upload Profile Photo
+            </label>
+
+            </div>
+         )}
 
       </div>
 
