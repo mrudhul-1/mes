@@ -18,16 +18,18 @@ const ChatWindow = () => {
     email:"",
     password:"",
     confirmpassword:"",
-    profilpic:""
+    profilePic:null
   })
+
+  // step logic***********************************************************************
 
   const handleSend = (msg) => {
 
-    const newMessage = { text: msg, sender: "user" }
+    const newMessage = { text: msg, sender: "user", type: "text" }
 
     setMessages((prev)=>[...prev, newMessage])
 
-      // step logic***********************************************************************
+      
 
   if(step === 0){
     setFormData(prev => ({...prev,name:msg}))
@@ -36,8 +38,8 @@ const ChatWindow = () => {
     setTimeout(()=>{
       setIsTyping(false)
       setMessages(prev => [...prev,
-        {text:`Nice to meet you ${msg}!`,sender:"bot"},
-        {text:"What's your email?", sender:"bot"}
+        {text:`Nice to meet you ${msg}!`,sender:"bot",type:"text"},
+        {text:"What's your email?", sender:"bot",type:"text"}
       ])
     },1500)
 
@@ -53,7 +55,7 @@ const ChatWindow = () => {
     setTimeout(()=>{
       setIsTyping(false)
       setMessages(prev => [...prev,
-        {text:"create a password",sender:"bot"}
+        {text:"create a password",sender:"bot",type:"text"}
       ])
     },1500)
 
@@ -67,7 +69,7 @@ const ChatWindow = () => {
     setTimeout(()=>{
       setIsTyping(false)
       setMessages(prev => [...prev,
-        {text:"Confirm your password",sender:"bot"}
+        {text:"Confirm your password",sender:"bot",type:"text"}
       ])
     },1500)
 
@@ -82,8 +84,8 @@ const ChatWindow = () => {
        setTimeout(()=>{
         setIsTyping(false)
         setMessages(prev => [...prev,
-          {text:"✅ Password confirmed!", sender:"bot"},
-        {text:"Please upload your profile photo 📷", sender:"bot"}
+          {text:"✅ Password confirmed!", sender:"bot",type:"text"},
+        {text:"Please upload your profile photo 📷", sender:"bot",type:"text"}
         ])
        },1500)
 
@@ -92,20 +94,53 @@ const ChatWindow = () => {
 
     else{
       
-      
+      setIsTyping(true)
       setTimeout(()=>{
-        
+       setIsTyping(false)
         setMessages(prev => [...prev,
-          {text:"Password do not match. Please retype password.",sender:"bot"}
+          {text:"Password do not match. Please retype password.",sender:"bot",type:"text"}
         ])
       },1000)
     }
   }
-  }
+}
 
-  const handeImageSend = (onImageSend)=>{
+// this is image logic ***********************************************************
 
-  }
+const handleImageSend = (file) => {
+
+  if(step !== 4) return
+
+  const imageURL = file
+
+  // Show image in chat
+  setMessages(prev => [...prev,
+    { text: imageURL, sender: "user", type: "image" }
+  ])
+
+  // Save to formData
+  setFormData(prev => ({...prev,
+    profilePic: file
+  }))
+
+  setIsTyping(true)
+
+  setTimeout(() => {
+
+    setIsTyping(false)
+
+    setMessages(prev => [
+      ...prev,
+      { text: "Nice photo! 👍", sender: "bot", type:"text" },
+      { text: "Click register to complete ✅", sender: "bot", type:"text" }
+    ])
+
+  },1500)
+
+  setStep(5)
+}
+
+  
 
 
 
@@ -120,6 +155,7 @@ const ChatWindow = () => {
             key={index}
             text={msg.text}
             sender={msg.sender}
+            type={msg.type}
           />
         ))}
 
@@ -131,7 +167,14 @@ const ChatWindow = () => {
       </div>
 
       {/* Input Area */}
-      <ChatInput onSend={handleSend} />
+      {step < 5 && (<ChatInput onSend={handleSend} onImageSend={handleImageSend} step={step}/>)}
+
+      {step === 5 && (
+      <div className="p-4">
+      <button className="w-full h-12 bg-green-600 text-white rounded-xl">
+      Register
+      </button>
+      </div>)}
 
     </div>
   )
