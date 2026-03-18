@@ -73,8 +73,11 @@ export default function Login() {
             </button>
           </form>
 
-          <p className="text-sm text-center mt-4 text-gray-600">
+          <p className="text-sm text-left mt-4 text-gray-600">
             Forgot password?
+          </p>
+          <p className="text-sm text-right mt-4 text-gray-600">
+           Register me
           </p>
         </div>
       </div>
