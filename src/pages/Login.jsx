@@ -1,10 +1,14 @@
 
 
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const navigate = useNavigate()
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -76,9 +80,9 @@ export default function Login() {
           <p className="text-sm text-left mt-4 text-gray-600">
             Forgot password?
           </p>
-          <p className="text-sm text-right mt-4 text-gray-600">
+          <div className="text-sm text-right mt-4 text-gray-600 hover:underline hover:cursor-auto" onClick={()=>navigate("/register")}>
            Register me
-          </p>
+          </div>
         </div>
       </div>
     </div>
