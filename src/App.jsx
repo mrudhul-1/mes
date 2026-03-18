@@ -1,6 +1,9 @@
 import { RouterProvider} from "react-router-dom"
 import routes from "./routes/Routes"
 
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 import Login from "./pages/Login"
 import Register from "./pages/Register"
 
@@ -8,10 +11,13 @@ import Register from "./pages/Register"
 
 const App = () => {
   return (
-    <div>
+    <>
+   
     {/* <Login></Login> */}
+    <ToastContainer />
     <RouterProvider router={routes}></RouterProvider>
-    </div>
+   
+    </>
   )
 }
 

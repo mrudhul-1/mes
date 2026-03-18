@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 
 export default function Login() {
@@ -12,7 +13,26 @@ export default function Login() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log({ email, password });
+
+    if (!email && !password) {
+      toast.error("Both fields are required")
+      return
+    }
+
+    if (!email) {
+      toast.error("Email is required")
+      return
+    }
+
+    if (!password) {
+      toast.error("Password is required")
+      return
+    }
+
+    if (!email.includes("@")){
+      toast.error("Invalid email formate")
+    }
+    // console.log({ email, password });
   };
 
   return (
@@ -69,7 +89,7 @@ export default function Login() {
             </div>
 
             {/* Button */}
-            <button
+            <button onClick={handleSubmit}
               type="submit"
               className="w-full bg-purple-600 text-white py-2 rounded-lg hover:bg-purple-700 transition"
             >
