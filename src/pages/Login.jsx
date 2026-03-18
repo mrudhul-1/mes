@@ -29,7 +29,7 @@ export default function Login() {
       return
     }
 
-    if (!email.includes("@")){
+    if (!email.includes("@gmail.com")){
       toast.error("Invalid email formate")
     }
     // console.log({ email, password });
